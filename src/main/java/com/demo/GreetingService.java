@@ -4,7 +4,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GreetingService {
-    public Greeting getGreeting() {
-        return new Greeting("Hello, Spring!");
+    public Greeting getGreeting(String name) {
+        if (null == name) {
+            throw new RuntimeException();
+        }
+
+        return new Greeting("Hello, " + name);
     }
 }

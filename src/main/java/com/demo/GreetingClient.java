@@ -14,8 +14,8 @@ public class GreetingClient {
         this.client = builder.baseUrl("http://localhost:8080").build();
     }
 
-    public Mono<String> getMessage() {
-        return this.client.get().uri("/hello").accept(MediaType.APPLICATION_JSON)
+    public Mono<String> getMessage(String name) {
+        return this.client.get().uri("/hello/" + name).accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(Greeting.class)
                 .map(Greeting::getMessage);

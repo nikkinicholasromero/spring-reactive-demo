@@ -24,13 +24,13 @@ public class GreetingRouterTest {
 
     @BeforeEach
     public void setup() {
-        when(greetingService.getGreeting()).thenReturn(new Greeting("Hello, World!"));
+        when(greetingService.getGreeting("World!")).thenReturn(new Greeting("Hello, World!"));
     }
 
     @Test
     public void testHello() {
         webTestClient
-                .get().uri("/hello")
+                .get().uri("/hello/World!")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()

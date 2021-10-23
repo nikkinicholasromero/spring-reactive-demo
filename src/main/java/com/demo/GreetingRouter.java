@@ -18,7 +18,7 @@ public class GreetingRouter {
 
     @Bean
     public RouterFunction<ServerResponse> route(GreetingHandler greetingHandler) {
-        return RouterFunctions.route(GET("/hello")
+        return RouterFunctions.route(GET("/hello/{name}")
                 .and(accept(MediaType.APPLICATION_JSON)), greetingHandler::hello);
     }
 }
