@@ -1,6 +1,5 @@
 package com.demo;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -22,13 +23,10 @@ public class GreetingRouterTest {
     @MockBean
     private GreetingService greetingService;
 
-    @BeforeEach
-    public void setup() {
-        when(greetingService.getGreeting("World!")).thenReturn(new Greeting("Hello, World!"));
-    }
-
     @Test
-    public void testHello() {
+    public void hello_whenOk() {
+        when(greetingService.getGreeting("World!")).thenReturn(new Greeting("Hello, World!"));
+
         webTestClient
                 .get().uri("/hello/World!")
                 .accept(MediaType.APPLICATION_JSON)
@@ -37,5 +35,16 @@ public class GreetingRouterTest {
                 .expectBody(Greeting.class).value(greeting -> {
                     assertThat(greeting.getMessage()).isEqualTo("Hello, World!");
                 });
+    }
+
+    @Test
+    public void hello_whenBadRequest() {
+        doThrow(new RuntimeException()).when(greetingService).getGreeting(anyString());
+
+        webTestClient
+                .get().uri("/hello/World!")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 }

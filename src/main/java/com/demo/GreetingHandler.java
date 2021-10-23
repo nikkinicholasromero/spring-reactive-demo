@@ -15,9 +15,8 @@ public class GreetingHandler {
     private GreetingService service;
 
     public Mono<ServerResponse> hello(ServerRequest request) {
-        Greeting greeting = service.getGreeting(request.pathVariable("name"));
-
         try {
+            Greeting greeting = service.getGreeting(request.pathVariable("name"));
             return ServerResponse.ok()
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(BodyInserters.fromValue(greeting));
